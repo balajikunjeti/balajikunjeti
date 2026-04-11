@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Balaji Kunjeti — Product Leader</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --ink: #07090f;
+    --paper: #f0ece3;
+    --gold: #c8923a;
+    --gold-lt: #e8ad52;
+    --gold-dim: rgba(200,146,58,0.25);
+    --muted: rgba(240,236,227,0.48);
+    --serif: 'Playfair Display', Georgia, serif;
+    --sans: 'DM Sans', system-ui, sans-serif;
+  }
+  html { scroll-behavior: smooth; }
+  body { background: var(--ink); color: var(--paper); font-family: var(--sans); font-size: 16px; line-height: 1.7; overflow-x: hidden; }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 1.4rem 3rem;
+    background: linear-gradient(180deg, rgba(7,9,15,0.97) 0%, transparent 100%);
+  }
+  .nav-logo { font-family: var(--serif); font-size: 1.05rem; color: var(--paper); text-decoration: none; letter-spacing: 0.03em; }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a { font-size: 0.75rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--gold-lt); }
+
+  /* ── HERO ── */
+  #hero {
+    min-height: 100vh;
+    display: grid; grid-template-columns: 1fr 1.1fr;
+    align-items: center; gap: 0;
+    padding: 5.5rem 0 3rem 4rem;
+    position: relative;
+  }
+  .hero-text { padding-right: 2rem; max-width: 500px; }
+  .hero-eyebrow {
+    font-size: 0.68rem; letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 1.6rem;
+    display: flex; align-items: center; gap: 0.8rem;
+  }
+  .hero-eyebrow::before { content: ''; width: 28px; height: 1px; background: var(--gold); }
+  h1 { font-family: var(--serif); font-size: clamp(3rem, 5.5vw, 5rem); font-weight: 400; line-height: 1.05; margin-bottom: 0.6rem; }
+  h1 em { font-style: italic; color: var(--gold-lt); }
+  .hero-punch {
+    font-family: var(--serif); font-style: italic; font-size: clamp(1rem, 1.6vw, 1.3rem);
+    color: var(--muted); border-left: 2px solid var(--gold); padding-left: 1rem;
+    margin: 1.4rem 0 1.8rem; line-height: 1.5;
+  }
+  .hero-desc { font-size: 0.9rem; color: rgba(240,236,227,0.55); max-width: 400px; margin-bottom: 2.2rem; line-height: 1.85; }
+  .hero-stats { display: flex; gap: 2.5rem; margin-bottom: 2.5rem; }
+  .stat-num { font-family: var(--serif); font-size: 2.1rem; font-weight: 700; color: var(--gold-lt); line-height: 1; }
+  .stat-label { font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(240,236,227,0.38); margin-top: 0.25rem; }
+  .hero-cta {
+    display: inline-flex; align-items: center; gap: 0.75rem;
+    padding: 0.8rem 1.8rem; border: 1px solid var(--gold);
+    color: var(--gold); font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase;
+    text-decoration: none; transition: all 0.22s;
+  }
+  .hero-cta:hover { background: var(--gold); color: var(--ink); }
+
+  /* ── GLOBE ── */
+  .globe-wrap {
+    position: relative; width: 100%; height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+  }
+  #globe-canvas { cursor: grab; display: block; }
+  #globe-canvas:active { cursor: grabbing; }
+  #globe-labels {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none; overflow: hidden;
+  }
+  .glabel {
+    position: absolute; transform: translate(-50%, -50%);
+    font-family: var(--sans); font-size: 9.5px; font-weight: 500;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    white-space: nowrap; transition: opacity 0.3s;
+    text-shadow: 0 0 8px rgba(7,9,15,0.9), 0 0 3px rgba(7,9,15,1);
+    pointer-events: none;
+  }
+  .glabel.hl { color: var(--gold-lt); font-size: 10px; letter-spacing: 0.12em; }
+  .glabel.dim { color: rgba(240,236,227,0.5); }
+  .globe-badge {
+    position: absolute; bottom: 1.5rem; right: 1.5rem;
+    background: rgba(7,9,15,0.88); border: 1px solid rgba(200,146,58,0.35);
+    padding: 1rem 1.25rem; backdrop-filter: blur(4px);
+  }
+  .badge-title { font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.65rem; }
+  .badge-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.72rem; color: rgba(240,236,227,0.65); margin-bottom: 0.25rem; }
+  .badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold-lt); flex-shrink: 0; }
+  .globe-loading {
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    font-size: 0.72rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold);
+    opacity: 0.7; transition: opacity 0.5s;
+  }
+
+  /* ── SECTIONS ── */
+  section { padding: 6rem 5rem; }
+  .sec-hd { display: flex; align-items: baseline; gap: 1.25rem; margin-bottom: 3.5rem; }
+  .sec-n { font-family: var(--serif); font-size: 0.82rem; color: var(--gold); opacity: 0.65; }
+  h2 { font-family: var(--serif); font-size: clamp(1.7rem, 2.8vw, 2.5rem); font-weight: 400; }
+  .sec-ln { flex: 1; height: 1px; background: rgba(240,236,227,0.08); }
+
+  /* ── IMPACT ── */
+  #impact { background: rgba(200,146,58,0.05); border-top: 1px solid rgba(200,146,58,0.18); border-bottom: 1px solid rgba(200,146,58,0.18); }
+  .metrics-grid { display: grid; grid-template-columns: repeat(4, 1fr); }
+  .metric-card { padding: 2.5rem 2rem; border-right: 1px solid rgba(240,236,227,0.07); transition: background 0.3s; }
+  .metric-card:last-child { border-right: none; }
+  .metric-card:hover { background: rgba(200,146,58,0.07); }
+  .metric-big { font-family: var(--serif); font-size: 2.9rem; font-weight: 700; color: var(--gold-lt); line-height: 1; margin-bottom: 0.6rem; }
+  .metric-punch { font-size: 0.8rem; color: var(--paper); font-weight: 500; margin-bottom: 0.35rem; }
+  .metric-sub { font-size: 0.76rem; color: var(--muted); line-height: 1.5; }
+
+  /* ── MARKETS INTRO ── */
+  #markets-intro { padding: 5rem 5rem 1rem; }
+
+  /* ── EXPERIENCE ── */
+  #experience { padding-top: 2rem; }
+  .exp-tl { position: relative; padding-left: 2rem; }
+  .exp-tl::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 1px; background: rgba(240,236,227,0.09); }
+  .exp-item { position: relative; padding: 0 0 3.5rem 2.5rem; }
+  .exp-item::before { content: ''; position: absolute; left: -4px; top: 9px; width: 8px; height: 8px; border-radius: 50%; background: var(--ink); border: 1px solid var(--gold); transition: background 0.2s; }
+  .exp-item:hover::before { background: var(--gold); }
+  .exp-meta { display: flex; align-items: baseline; gap: 1rem; margin-bottom: 0.35rem; flex-wrap: wrap; }
+  .exp-co { font-family: var(--serif); font-size: 1.22rem; color: var(--paper); }
+  .exp-period { font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold); opacity: 0.8; }
+  .exp-role { font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(240,236,227,0.38); margin-bottom: 0.5rem; }
+  .exp-punch { font-family: var(--serif); font-style: italic; font-size: 1.02rem; color: rgba(240,236,227,0.75); margin-bottom: 0.9rem; line-height: 1.4; }
+  .exp-desc { font-size: 0.88rem; color: rgba(240,236,227,0.52); max-width: 600px; line-height: 1.85; margin-bottom: 1rem; }
+  .exp-bullets { list-style: none; max-width: 600px; }
+  .exp-bullets li { font-size: 0.83rem; color: rgba(240,236,227,0.5); padding: 0.3rem 0; border-bottom: 1px solid rgba(240,236,227,0.05); display: flex; align-items: baseline; gap: 0.7rem; }
+  .exp-bullets li::before { content: '→'; color: var(--gold); font-size: 0.72rem; flex-shrink: 0; }
+
+  /* ── EXPERTISE ── */
+  #expertise { background: rgba(240,236,227,0.02); }
+  .exp-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: rgba(240,236,227,0.07); }
+  .exp-card { background: var(--ink); padding: 2rem 1.75rem; transition: background 0.3s; }
+  .exp-card:hover { background: rgba(200,146,58,0.06); }
+  .exp-icon { width: 32px; height: 32px; margin-bottom: 1rem; color: var(--gold); }
+  .exp-title { font-family: var(--serif); font-size: 1.05rem; margin-bottom: 0.5rem; }
+  .exp-desc-card { font-size: 0.8rem; color: var(--muted); line-height: 1.7; }
+
+  /* ── EDU ── */
+  #education { padding: 5rem 5rem; }
+  .edu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  .edu-card { padding: 1.75rem 2rem; border: 1px solid rgba(240,236,227,0.07); transition: border-color 0.3s; }
+  .edu-card:hover { border-color: rgba(200,146,58,0.35); }
+  .edu-degree { font-family: var(--serif); font-size: 1rem; margin-bottom: 0.3rem; }
+  .edu-school { font-size: 0.78rem; color: var(--gold); letter-spacing: 0.05em; }
+
+  /* ── FOOTER ── */
+  footer { padding: 2.5rem 5rem; border-top: 1px solid rgba(240,236,227,0.07); display: flex; justify-content: space-between; align-items: center; }
+  .footer-name { font-family: var(--serif); font-size: 0.98rem; }
+  .footer-contact { font-size: 0.78rem; color: rgba(240,236,227,0.38); }
+  .footer-contact a { color: var(--gold); text-decoration: none; }
+
+  /* ── ABOUT ── */
+  #about { padding: 6rem 5rem; background: rgba(200,146,58,0.04); border-top: 1px solid rgba(200,146,58,0.12); }
+  .about-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 5rem; align-items: start; }
+  .about-bio { font-size: 0.95rem; color: rgba(240,236,227,0.62); line-height: 1.95; }
+  .about-bio p + p { margin-top: 1rem; }
+  .about-bio strong { color: var(--paper); font-weight: 500; }
+  .about-punch-quote {
+    font-family: var(--serif); font-style: italic;
+    font-size: clamp(1.05rem, 1.8vw, 1.3rem);
+    color: var(--muted); border-left: 2px solid var(--gold);
+    padding-left: 1.1rem; margin-bottom: 1.6rem; line-height: 1.5;
+  }
+  .contact-card {
+    border: 1px solid rgba(240,236,227,0.08);
+    padding: 2rem 2rem;
+    position: sticky; top: 6rem;
+  }
+  .contact-card-title {
+    font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 1.5rem;
+  }
+  .contact-item {
+    display: flex; align-items: center; gap: 1rem;
+    padding: 0.9rem 0; border-bottom: 1px solid rgba(240,236,227,0.06);
+    text-decoration: none; transition: all 0.2s; cursor: pointer;
+  }
+  .contact-item:last-child { border-bottom: none; }
+  .contact-item:hover .contact-icon { background: var(--gold); color: var(--ink); }
+  .contact-item:hover .contact-label { color: var(--gold-lt); }
+  .contact-icon {
+    width: 38px; height: 38px; border-radius: 2px;
+    border: 1px solid rgba(200,146,58,0.3);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--gold); transition: all 0.2s; flex-shrink: 0;
+  }
+  .contact-info { display: flex; flex-direction: column; gap: 0.1rem; min-width: 0; }
+  .contact-label { font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(240,236,227,0.4); transition: color 0.2s; }
+  .contact-value { font-size: 0.88rem; color: var(--paper); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .about-traits { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.5rem; }
+  .trait-tag {
+    font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 0.3rem 0.8rem; border: 1px solid rgba(200,146,58,0.25);
+    color: rgba(240,236,227,0.5);
+  }
+  @media (max-width: 900px) {
+    #about { padding: 4rem 1.5rem; }
+    .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+    .contact-card { position: static; }
+  }
+
+  /* ── FADE ── */
+  .fi { opacity: 0; transform: translateY(20px); transition: opacity 0.65s ease, transform 0.65s ease; }
+  .fi.on { opacity: 1; transform: none; }
+
+  @media (max-width: 900px) {
+    #hero { grid-template-columns: 1fr; padding: 5rem 1.5rem 1.5rem; }
+    .hero-text { max-width: 100%; padding-right: 0; }
+    .globe-wrap { height: 380px; }
+    section { padding: 4rem 1.5rem; }
+    #markets-intro { padding: 4rem 1.5rem 0; }
+    #education { padding: 4rem 1.5rem; }
+    footer { flex-direction: column; gap: 0.75rem; padding: 2rem 1.5rem; text-align: center; }
+    .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+    .exp-grid { grid-template-columns: 1fr; }
+    .edu-grid { grid-template-columns: 1fr; }
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="#">Balaji Kunjeti</a>
+  <ul class="nav-links">
+    <li><a href="#impact">Impact</a></li>
+    <li><a href="#markets-intro">Markets</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#expertise">Expertise</a></li>
+    <li><a href="#about">About</a></li>
+  </ul>
+</nav>
+
+<!-- ── HERO ── -->
+<section id="hero">
+  <div class="hero-text fi">
+    <div class="hero-eyebrow">Product Leader · AI/ML · Global Commerce</div>
+    <h1>Balaji<br><em>Kunjeti</em></h1>
+    <p class="hero-punch">"I don't just enter markets.<br>I build the playbook they copy."</p>
+    <p class="hero-desc">
+      16 years. Six global markets. A $700M portfolio on its way to $1B+. The kind of products that move economies — not just metrics.
+    </p>
+    <div class="hero-stats">
+      <div>
+        <div class="stat-num">$1B+</div>
+        <div class="stat-label">GMV Trajectory</div>
+      </div>
+      <div>
+        <div class="stat-num">18</div>
+        <div class="stat-label">PMs Led</div>
+      </div>
+      <div>
+        <div class="stat-num">24×</div>
+        <div class="stat-label">ROI Delivered</div>
+      </div>
+    </div>
+    <a class="hero-cta" href="https://www.linkedin.com/in/balajikunjeti/" target="_blank">
+      Connect on LinkedIn
+      <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2 11L11 2M11 2H4.5M11 2V8.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    </a>
+  </div>
+
+  <div class="globe-wrap fi" style="transition-delay:0.2s">
+    <canvas id="globe-canvas"></canvas>
+    <div id="globe-labels"></div>
+    <div class="globe-loading" id="globe-loading">Rendering globe…</div>
+    <div class="globe-badge">
+      <div class="badge-title">Markets Served</div>
+      <div class="badge-item"><div class="badge-dot"></div>United States</div>
+      <div class="badge-item"><div class="badge-dot"></div>Canada</div>
+      <div class="badge-item"><div class="badge-dot"></div>Mexico</div>
+      <div class="badge-item"><div class="badge-dot"></div>Chile</div>
+      <div class="badge-item"><div class="badge-dot"></div>India</div>
+      <div class="badge-item"><div class="badge-dot"></div>Europe</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── IMPACT ── -->
+<section id="impact">
+  <div class="sec-hd fi"><span class="sec-n">01</span><h2>The Numbers Don't Lie</h2><div class="sec-ln"></div></div>
+  <div class="metrics-grid">
+    <div class="metric-card fi">
+      <div class="metric-big">154%</div>
+      <div class="metric-punch">Targets were floors, not ceilings.</div>
+      <div class="metric-sub">Revenue targets exceeded YoY — three consecutive years, three international markets.</div>
+    </div>
+    <div class="metric-card fi" style="transition-delay:.08s">
+      <div class="metric-big">60%</div>
+      <div class="metric-punch">Customers didn't wait. Neither did I.</div>
+      <div class="metric-sub">Click-to-deliver time slashed in half via large-scale data science, for 30%+ of customers.</div>
+    </div>
+    <div class="metric-card fi" style="transition-delay:.16s">
+      <div class="metric-big">500bps</div>
+      <div class="metric-punch">We didn't match prices. We set them.</div>
+      <div class="metric-sub">Marketplace price competitiveness gained across US, Canada, Mexico, and Chile — in six months.</div>
+    </div>
+    <div class="metric-card fi" style="transition-delay:.24s">
+      <div class="metric-big">CSAT 87</div>
+      <div class="metric-punch">Not just delivered. Loved.</div>
+      <div class="metric-sub">Express Delivery in Canada earned the highest CSAT within 9 months of launch.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── MARKETS INTRO ── -->
+<section id="markets-intro">
+  <div class="sec-hd fi"><span class="sec-n">02</span><h2>Six Markets. Zero Playbooks.</h2><div class="sec-ln"></div></div>
+  <p class="fi" style="color:rgba(240,236,227,0.52); max-width:560px; font-size:0.9rem; line-height:1.9; margin-bottom:1rem">
+    Every market was a different fight — US pricing wars, Canada's Express Delivery from scratch, Mexico and Chile marketplace launches, India's omnichannel revolution, and European market intelligence. Drag the globe. Every lit country is a story.
+  </p>
+</section>
+
+<!-- ── EXPERIENCE ── -->
+<section id="experience">
+  <div class="sec-hd fi"><span class="sec-n">03</span><h2>Experience</h2><div class="sec-ln"></div></div>
+  <div class="exp-tl">
+
+    <div class="exp-item fi">
+      <div class="exp-meta">
+        <span class="exp-co">Walmart</span>
+        <span class="exp-period">May 2018 – Present</span>
+      </div>
+      <div class="exp-role">Product Leader · Sunnyvale, CA</div>
+      <p class="exp-punch">"Built Walmart's global marketplace from a blank canvas — and took it to $1B+."</p>
+      <p class="exp-desc">Own product strategy and P&L outcomes for end-to-end e-commerce across Pricing (US, CA, MX, CL), Walmart Fulfillment Services internationally, and AI/ML-driven marketplace intelligence. Lead 18 Product Managers across multiple domains.</p>
+      <ul class="exp-bullets">
+        <li>First-time marketplace launches in Canada, Mexico, Chile — 154% revenue YoY for 3 years, 24× ROI</li>
+        <li>Led 0→1 Express Delivery in Canada (Instacart partnership) — 10% order growth, CSAT 87 in 9 months</li>
+        <li>Architected AI/ML inventory optimization products; filed a patent for the optimization approach</li>
+        <li>Deployed data science models cutting click-to-deliver 60% for 30%+ of customers globally</li>
+        <li>Built real-time order & search — indexing efficiency +46%, latency -15%</li>
+        <li>Built seller APIs enabling seamless onboarding, integrations, and marketplace ecosystem expansion</li>
+      </ul>
+    </div>
+
+    <div class="exp-item fi">
+      <div class="exp-meta">
+        <span class="exp-co">Lenskart</span>
+        <span class="exp-period">Jun 2016 – Jan 2018</span>
+      </div>
+      <div class="exp-role">Group Product Manager · Bangalore, India</div>
+      <p class="exp-punch">"Turned India's largest eyewear chain into a 24/7 omnichannel machine."</p>
+      <p class="exp-desc">Single product owner across digital and retail channels — unifying search, OMS, sourcing, and payments across online and 1,000+ franchise stores.</p>
+      <ul class="exp-bullets">
+        <li>Scaled daily orders from 2K to 6K (3× growth) across 20 months</li>
+        <li>Automated seller onboarding: 5 days → under 2 hours. 90%+ time reduction.</li>
+        <li>Search relevance +12%, engagement +2%, latency -40%</li>
+        <li>Led ERP/POS integration and full GST rollout across all channels</li>
+      </ul>
+    </div>
+
+    <div class="exp-item fi">
+      <div class="exp-meta">
+        <span class="exp-co">Flipkart</span>
+        <span class="exp-period">May 2013 – Jul 2015</span>
+      </div>
+      <div class="exp-role">Group Business Analyst · Bangalore, India</div>
+      <p class="exp-punch">"Scaled India's largest e-commerce fulfillment — before anyone knew what that meant."</p>
+      <ul class="exp-bullets">
+        <li>Built fulfillment control tower — order delays -20%, planning accuracy +25%</li>
+        <li>Warehouse optimization models cut design time by 90%</li>
+      </ul>
+    </div>
+
+    <div class="exp-item fi">
+      <div class="exp-meta">
+        <span class="exp-co">Amazon Distributors · ADP · IBM GBS</span>
+        <span class="exp-period">2007 – 2016</span>
+      </div>
+      <div class="exp-role">Earlier Roles · India</div>
+      <ul class="exp-bullets">
+        <li>Last-mile delivery processing time -26% via mobile app & route optimization (Amazon Distributors)</li>
+        <li>Payroll processing productivity improved via key module design (ADP)</li>
+        <li>Order management processes streamlined by 22% using data-driven methodology (IBM GBS)</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── EXPERTISE ── -->
+<section id="expertise">
+  <div class="sec-hd fi"><span class="sec-n">04</span><h2>How I Win</h2><div class="sec-ln"></div></div>
+  <div class="exp-grid">
+    <div class="exp-card fi">
+      <svg class="exp-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.2">
+        <path d="M4 24V14l12-10 12 10v10M10 24v-8h12v8"/>
+      </svg>
+      <div class="exp-title">Build Fast. Ship Right.</div>
+      <div class="exp-desc-card">0→1 launches, multi-year roadmaps, and relentless execution. I don't just write strategy — I ship it.</div>
+    </div>
+    <div class="exp-card fi" style="transition-delay:.07s">
+      <svg class="exp-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.2">
+        <circle cx="16" cy="16" r="4"/><path d="M16 4v3M16 25v3M4 16h3M25 16h3M7.5 7.5l2 2M22.5 22.5l2 2M7.5 24.5l2-2M22.5 9.5l2-2"/>
+      </svg>
+      <div class="exp-title">AI That Ships, Not Slides.</div>
+      <div class="exp-desc-card">ML-powered inventory, pricing intelligence, personalization at scale — production products, not proof of concepts.</div>
+    </div>
+    <div class="exp-card fi" style="transition-delay:.14s">
+      <svg class="exp-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.2">
+        <path d="M4 24l7-11 5 7 4-5 8 9"/>
+      </svg>
+      <div class="exp-title">Revenue Is the Metric.</div>
+      <div class="exp-desc-card">Pricing systems, GMV growth, marketplace competitiveness — I own outcomes, not just roadmaps.</div>
+    </div>
+    <div class="exp-card fi">
+      <svg class="exp-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.2">
+        <circle cx="16" cy="8" r="3"/><circle cx="7" cy="24" r="3"/><circle cx="25" cy="24" r="3"/>
+        <path d="M13.5 11l-4 10M18.5 11l4 10M10 24h12"/>
+      </svg>
+      <div class="exp-title">Leaders Who Build Leaders.</div>
+      <div class="exp-desc-card">18 PMs across multiple domains. I hire for ownership, develop for breadth, and build orgs that outlast any roadmap.</div>
+    </div>
+    <div class="exp-card fi" style="transition-delay:.07s">
+      <svg class="exp-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.2">
+        <circle cx="16" cy="16" r="11"/><path d="M16 5c-5 4-5 18 0 22M16 5c5 4 5 18 0 22M5 16h22"/>
+      </svg>
+      <div class="exp-title">Six Markets. One Playbook.</div>
+      <div class="exp-desc-card">US, Canada, Mexico, Chile, India, Europe. Same discipline, different battles — every one of them won.</div>
+    </div>
+    <div class="exp-card fi" style="transition-delay:.14s">
+      <svg class="exp-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.2">
+        <rect x="4" y="4" width="10" height="10" rx="1"/><rect x="18" y="4" width="10" height="10" rx="1"/>
+        <rect x="4" y="18" width="10" height="10" rx="1"/><rect x="18" y="18" width="10" height="10" rx="1"/>
+      </svg>
+      <div class="exp-title">From Click to Customer.</div>
+      <div class="exp-desc-card">Fulfillment, express delivery, real-time order systems — the invisible infrastructure behind seamless commerce.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── ABOUT ── -->
+<section id="about">
+  <div class="sec-hd fi"><span class="sec-n">06</span><h2>About Me</h2><div class="sec-ln"></div></div>
+  <div class="about-grid">
+    <div class="fi">
+      <p class="about-punch-quote">"The best product leaders don't just solve today's problem — they make tomorrow's problem irrelevant."</p>
+      <div class="about-bio">
+        <p>I'm a <strong>product leader with 16+ years</strong> of experience turning complex, ambiguous marketplace challenges into scaled, profitable realities. My career spans IBM, Flipkart, Lenskart, and now Walmart — each chapter a bigger canvas, a harder problem, a higher bar.</p>
+        <p>At Walmart, I own the end-to-end product strategy for international marketplace expansion — pricing, fulfillment, seller experiences, and AI/ML-powered commerce across the <strong>US, Canada, Mexico, and Chile</strong>. I don't just manage roadmaps. I set the vision, build the team, and stay accountable to the outcome.</p>
+        <p>Before Walmart, I rebuilt Lenskart's omnichannel stack from the ground up — unifying 1,000+ franchise stores with a digital-first experience that 3× daily order volume. Before that, I was in the weeds at Flipkart learning what "scale" actually means when millions of packages depend on your decisions.</p>
+        <p>I'm based in the <strong>San Francisco Bay Area</strong>. I lead with data, move with conviction, and build teams that outlast any single product cycle.</p>
+      </div>
+      <div class="about-traits">
+        <span class="trait-tag">Marketplace Strategy</span>
+        <span class="trait-tag">AI/ML Products</span>
+        <span class="trait-tag">Global Expansion</span>
+        <span class="trait-tag">Team Builder</span>
+        <span class="trait-tag">0→1 Launches</span>
+        <span class="trait-tag">P&L Ownership</span>
+        <span class="trait-tag">Pricing Systems</span>
+        <span class="trait-tag">Data-Driven</span>
+      </div>
+    </div>
+
+    <div class="fi" style="transition-delay:0.15s">
+      <div class="contact-card">
+        <div class="contact-card-title">Get in Touch</div>
+
+        <a class="contact-item" href="mailto:balaji.kunjeti7@gmail.com">
+          <div class="contact-icon">
+            <svg width="17" height="17" viewBox="0 0 17 17" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="1.5" y="3.5" width="14" height="10" rx="1.5"/>
+              <path d="M1.5 5.5l7 5 7-5"/>
+            </svg>
+          </div>
+          <div class="contact-info">
+            <span class="contact-label">Email</span>
+            <span class="contact-value">balaji.kunjeti7@gmail.com</span>
+          </div>
+        </a>
+
+        <a class="contact-item" href="https://www.linkedin.com/in/balajikunjeti/" target="_blank" rel="noopener">
+          <div class="contact-icon">
+            <svg width="17" height="17" viewBox="0 0 17 17" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="1.5" y="1.5" width="14" height="14" rx="2"/>
+              <path d="M5 7.5v5M5 5v.01"/>
+              <path d="M8.5 12.5v-3a1.5 1.5 0 0 1 3 0v3M8.5 7.5v5"/>
+            </svg>
+          </div>
+          <div class="contact-info">
+            <span class="contact-label">LinkedIn</span>
+            <span class="contact-value">linkedin.com/in/balajikunjeti</span>
+          </div>
+        </a>
+
+        <a class="contact-item" href="https://github.com/balajikunjeti" target="_blank" rel="noopener">
+          <div class="contact-icon">
+            <svg width="17" height="17" viewBox="0 0 17 17" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 13c-3 .9-3-1.7-4-2m8 4v-2.8a2.4 2.4 0 0 0-.7-1.8c2.3-.25 4.7-1.1 4.7-5a3.9 3.9 0 0 0-1-2.7 3.6 3.6 0 0 0-.1-2.7s-.85-.27-2.8 1.05a9.6 9.6 0 0 0-5.1 0C3.85 1.53 3 1.8 3 1.8a3.6 3.6 0 0 0-.1 2.7 3.9 3.9 0 0 0-1 2.7c0 3.88 2.4 4.75 4.7 5a2.4 2.4 0 0 0-.7 1.8V17"/>
+            </svg>
+          </div>
+          <div class="contact-info">
+            <span class="contact-label">GitHub</span>
+            <span class="contact-value">github.com/balajikunjeti</span>
+          </div>
+        </a>
+
+        <a class="contact-item" href="tel:+16505825763">
+          <div class="contact-icon">
+            <svg width="17" height="17" viewBox="0 0 17 17" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 2.5A1.5 1.5 0 0 1 4.5 1h1a1.5 1.5 0 0 1 1.5 1.5v1a1.5 1.5 0 0 1-1 1.41M3 2.5v1A10 10 0 0 0 13.5 14h1A1.5 1.5 0 0 0 16 12.5v-1A1.5 1.5 0 0 0 14.5 10h-1a1.5 1.5 0 0 0-1.41 1"/>
+            </svg>
+          </div>
+          <div class="contact-info">
+            <span class="contact-label">Phone</span>
+            <span class="contact-value">+1 (650) 582-5763</span>
+          </div>
+        </a>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── EDUCATION ── -->
+<section id="education">
+  <div class="sec-hd fi"><span class="sec-n">07</span><h2>Education</h2><div class="sec-ln"></div></div>
+  <div class="edu-grid">
+    <div class="edu-card fi">
+      <div class="edu-degree">MBA — Operations & Finance</div>
+      <div class="edu-school">Management Development Institute (MDI), Gurgaon</div>
+    </div>
+    <div class="edu-card fi" style="transition-delay:.08s">
+      <div class="edu-degree">B.Tech — Mechanical Engineering</div>
+      <div class="edu-school">National Institute of Technology (NIT), Kurukshetra</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer class="fi">
+  <div class="footer-name">Balaji Kunjeti</div>
+  <div class="footer-contact">
+    <a href="tel:+16505825763">+1-650-582-5763</a> ·
+    <a href="mailto:balaji.kunjeti7@gmail.com">balaji.kunjeti7@gmail.com</a> ·
+    <a href="https://www.linkedin.com/in/balajikunjeti/" target="_blank">LinkedIn ↗</a>
+  </div>
+</footer>
+
+<!-- ═══════════════════════════════════════════ -->
+<!--  THREE.JS + TOPOJSON GLOBE                 -->
+<!-- ═══════════════════════════════════════════ -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js"></script>
+<script>
+(function () {
+  /* ── CONFIG ── */
+  const MARKET_IDS = new Set([
+    840,  // United States
+    124,  // Canada
+    484,  // Mexico
+    152,  // Chile
+    356,  // India
+    // Europe cluster
+    826,250,276,724,380,528,56,756,620,752,578,246,208,40,372,300,616,203,804,642,100,191,348,703,705,233,428,440,688,807,8,70
+  ]);
+
+  const COUNTRY_LABELS = [
+    { name:'United States', lat:38,   lng:-97,    hl:true  },
+    { name:'Canada',        lat:61,   lng:-100,   hl:true  },
+    { name:'Mexico',        lat:23,   lng:-102,   hl:true  },
+    { name:'Chile',         lat:-36,  lng:-71,    hl:true  },
+    { name:'India',         lat:21,   lng:79,     hl:true  },
+    { name:'Europe',        lat:50,   lng:10,     hl:true  },
+    { name:'Brazil',        lat:-10,  lng:-52              },
+    { name:'Russia',        lat:62,   lng:96               },
+    { name:'China',         lat:36,   lng:104              },
+    { name:'Australia',     lat:-26,  lng:133              },
+    { name:'Japan',         lat:36,   lng:138              },
+    { name:'Argentina',     lat:-40,  lng:-65              },
+    { name:'S. Africa',     lat:-30,  lng:25               },
+    { name:'Nigeria',       lat:9,    lng:8                },
+    { name:'Saudi Arabia',  lat:24,   lng:45               },
+    { name:'Indonesia',     lat:-2,   lng:118              },
+    { name:'Egypt',         lat:27,   lng:30               },
+    { name:'Kazakhstan',    lat:48,   lng:66               },
+    { name:'D.R. Congo',    lat:-3,   lng:24               },
+    { name:'Greenland',     lat:72,   lng:-41              },
+  ];
+
+  const ARCS = [
+    [37.09,-95.71, 56.13,-106.35],  // US→Canada
+    [37.09,-95.71, 23.63,-102.55],  // US→Mexico
+    [23.63,-102.55,-35.68,-71.54],  // Mexico→Chile
+    [37.09,-95.71, 20.59,78.96],    // US→India
+    [20.59,78.96,  50.85,4.35],     // India→Europe
+    [37.09,-95.71, 50.85,4.35],     // US→Europe
+  ];
+
+  /* ── SCENE SETUP ── */
+  const wrap      = document.querySelector('.globe-wrap');
+  const canvas    = document.getElementById('globe-canvas');
+  const labelsDiv = document.getElementById('globe-labels');
+
+  let W = wrap.clientWidth, H = wrap.clientHeight;
+
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setSize(W, H);
+  renderer.setClearColor(0x000000, 0);
+
+  const scene  = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(40, W / H, 0.1, 100);
+  camera.position.set(0, 0, 2.75);
+
+  /* ── LIGHTS ── */
+  scene.add(new THREE.AmbientLight(0xffffff, 0.1));
+  const sun = new THREE.DirectionalLight(0xfff0d8, 1.1);
+  sun.position.set(4, 2, 5); scene.add(sun);
+  const rim = new THREE.DirectionalLight(0xc8923a, 0.35);
+  rim.position.set(-4, -2, -2); scene.add(rim);
+
+  /* ── ROTATING GROUP ── */
+  const rg = new THREE.Group();
+  scene.add(rg);
+
+  /* ── GLOBE BASE ── */
+  const globeGeo = new THREE.SphereGeometry(1, 80, 80);
+  const globeMat = new THREE.MeshPhongMaterial({
+    color: 0x060c18, emissive: 0x020509, specular: 0x1a3050, shininess: 15
+  });
+  rg.add(new THREE.Mesh(globeGeo, globeMat));
+
+  /* ── ATMOSPHERE ── */
+  const atmMat = new THREE.MeshPhongMaterial({ color: 0x0a1e38, transparent: true, opacity: 0.2, side: THREE.BackSide });
+  scene.add(new THREE.Mesh(new THREE.SphereGeometry(1.1, 64, 64), atmMat));
+
+  /* ── STARS ── */
+  const sPos = [];
+  for (let i = 0; i < 1600; i++) {
+    const r = 18 + Math.random() * 8, t = Math.random() * Math.PI * 2, p = Math.acos(2 * Math.random() - 1);
+    sPos.push(r*Math.sin(p)*Math.cos(t), r*Math.cos(p), r*Math.sin(p)*Math.sin(t));
+  }
+  const sGeo = new THREE.BufferGeometry();
+  sGeo.setAttribute('position', new THREE.Float32BufferAttribute(sPos, 3));
+  scene.add(new THREE.Points(sGeo, new THREE.PointsMaterial({ color: 0xffffff, size: 0.05, transparent: true, opacity: 0.45 })));
+
+  /* ── HELPERS ── */
+  function ll3(lat, lon, r) {
+    const phi = (90 - lat) * Math.PI / 180;
+    const th  = (lon + 180) * Math.PI / 180;
+    return new THREE.Vector3(
+      -r * Math.sin(phi) * Math.cos(th),
+       r * Math.cos(phi),
+       r * Math.sin(phi) * Math.sin(th)
+    );
+  }
+
+  /* ── BUILD CANVAS TEXTURE ── */
+  function buildTexture(features) {
+    const TW = 2048, TH = 1024;
+    const c = document.createElement('canvas');
+    c.width = TW; c.height = TH;
+    const ctx = c.getContext('2d');
+
+    // Ocean
+    ctx.fillStyle = '#03060f'; ctx.fillRect(0, 0, TW, TH);
+
+    function gc(lon, lat) { return [(lon + 180) / 360 * TW, (90 - lat) / 180 * TH]; }
+
+    function makePath(feature) {
+      const g = feature.geometry; if (!g) return;
+      ctx.beginPath();
+      const ring = (r) => {
+        let pl = null;
+        r.forEach(([lo, la], i) => {
+          if (pl !== null && Math.abs(lo - pl) > 180) { ctx.closePath(); ctx.beginPath(); pl = null; }
+          const [x, y] = gc(lo, la);
+          pl === null ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+          pl = lo;
+        });
+        ctx.closePath();
+      };
+      if (g.type === 'Polygon') g.coordinates.forEach(ring);
+      else if (g.type === 'MultiPolygon') g.coordinates.forEach(p => p.forEach(ring));
+    }
+
+    // Land fills
+    features.forEach(f => {
+      makePath(f);
+      ctx.fillStyle = MARKET_IDS.has(+f.id) ? '#3d2106' : '#0c1825';
+      ctx.fill('evenodd');
+    });
+
+    // Gold glow on market countries
+    features.forEach(f => {
+      if (!MARKET_IDS.has(+f.id)) return;
+      makePath(f);
+      ctx.fillStyle = 'rgba(200,146,58,0.18)';
+      ctx.fill('evenodd');
+    });
+
+    // Borders
+    ctx.strokeStyle = '#162c45'; ctx.lineWidth = 0.7;
+    features.forEach(f => { makePath(f); ctx.stroke(); });
+
+    // Highlighted borders slightly brighter
+    ctx.strokeStyle = 'rgba(200,146,58,0.45)'; ctx.lineWidth = 1;
+    features.forEach(f => {
+      if (!MARKET_IDS.has(+f.id)) return;
+      makePath(f); ctx.stroke();
+    });
+
+    return c;
+  }
+
+  /* ── BUILD LINE BORDERS ── */
+  function buildBorders(features) {
+    const pts = [], hlPts = [];
+    features.forEach(f => {
+      const isHL = MARKET_IDS.has(+f.id);
+      const g = f.geometry; if (!g) return;
+      const ring = (r) => {
+        for (let i = 0; i < r.length - 1; i++) {
+          const [lo1,la1] = r[i], [lo2,la2] = r[i+1];
+          if (Math.abs(lo2 - lo1) > 180) continue;
+          const a = ll3(la1, lo1, 1.004), b = ll3(la2, lo2, 1.004);
+          (isHL ? hlPts : pts).push(a, b);
+        }
+      };
+      if (g.type === 'Polygon') g.coordinates.forEach(ring);
+      else if (g.type === 'MultiPolygon') g.coordinates.forEach(p => p.forEach(ring));
+    });
+
+    const bGeo = new THREE.BufferGeometry().setFromPoints(pts);
+    rg.add(new THREE.LineSegments(bGeo, new THREE.LineBasicMaterial({ color: 0x1a3858, transparent: true, opacity: 0.55 })));
+
+    const hGeo = new THREE.BufferGeometry().setFromPoints(hlPts);
+    rg.add(new THREE.LineSegments(hGeo, new THREE.LineBasicMaterial({ color: 0xc8923a, transparent: true, opacity: 0.7 })));
+  }
+
+  /* ── ARCS ── */
+  function addArcs() {
+    ARCS.forEach(([la1,lo1,la2,lo2]) => {
+      const s = ll3(la1, lo1, 1.0), e = ll3(la2, lo2, 1.0);
+      const mid = s.clone().add(e).normalize().multiplyScalar(1.28);
+      const pts = [];
+      for (let i = 0; i <= 70; i++) {
+        const t = i / 70;
+        pts.push(new THREE.Vector3()
+          .addScaledVector(s, (1-t)*(1-t))
+          .addScaledVector(mid, 2*(1-t)*t)
+          .addScaledVector(e, t*t));
+      }
+      const tube = new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 70, 0.0025, 4, false);
+      rg.add(new THREE.Mesh(tube, new THREE.MeshBasicMaterial({ color: 0xc8923a, transparent: true, opacity: 0.22 })));
+    });
+  }
+
+  /* ── MARKERS ── */
+  const pulseRings = [];
+  function addMarkers() {
+    const pts = [
+      { lat:37.09, lng:-95.71 },
+      { lat:56.13, lng:-106.35 },
+      { lat:23.63, lng:-102.55 },
+      { lat:-35.68, lng:-71.54 },
+      { lat:20.59, lng:78.96 },
+      { lat:50.85, lng:4.35 },
+    ];
+    pts.forEach(({lat,lng}) => {
+      const pos = ll3(lat, lng, 1.002);
+      const norm = pos.clone().normalize();
+      // dot
+      const dot = new THREE.Mesh(new THREE.SphereGeometry(0.016, 10, 10), new THREE.MeshBasicMaterial({ color: 0xe8ad52 }));
+      dot.position.copy(pos); rg.add(dot);
+      // spike
+      const sp = new THREE.Mesh(new THREE.CylinderGeometry(0.002, 0.007, 0.055, 6), new THREE.MeshBasicMaterial({ color: 0xe8ad52, transparent: true, opacity: 0.55 }));
+      sp.position.copy(pos.clone().multiplyScalar(1.03));
+      sp.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0), norm);
+      rg.add(sp);
+      // ring
+      const ring = new THREE.Mesh(new THREE.RingGeometry(0.024, 0.04, 24), new THREE.MeshBasicMaterial({ color: 0xe8ad52, side: THREE.DoubleSide, transparent: true, opacity: 0.45 }));
+      ring.position.copy(pos.clone().multiplyScalar(1.003));
+      ring.quaternion.setFromUnitVectors(new THREE.Vector3(0,0,1), norm);
+      rg.add(ring);
+      pulseRings.push({ m: ring, ph: Math.random() * Math.PI * 2 });
+    });
+  }
+
+  /* ── LABELS ── */
+  const labelEls = [];
+  const labelObj = new THREE.Group(); rg.add(labelObj);
+
+  function setupLabels() {
+    COUNTRY_LABELS.forEach(l => {
+      const el = document.createElement('div');
+      el.className = 'glabel ' + (l.hl ? 'hl' : 'dim');
+      el.textContent = l.name;
+      el.style.opacity = '0';
+      labelsDiv.appendChild(el);
+
+      const obj = new THREE.Object3D();
+      obj.position.copy(ll3(l.lat, l.lng, 1.05));
+      labelObj.add(obj);
+      labelEls.push({ el, obj });
+    });
+  }
+
+  const _wp = new THREE.Vector3(), _sp = new THREE.Vector3();
+  function updateLabels() {
+    const cd = camera.position.clone().normalize();
+    labelEls.forEach(({ el, obj }) => {
+      obj.getWorldPosition(_wp);
+      const vis = _wp.clone().normalize().dot(cd) > 0.18;
+      if (!vis) { el.style.opacity = '0'; return; }
+      _sp.copy(_wp).project(camera);
+      const x = (_sp.x + 1) / 2 * W;
+      const y = -(_sp.y - 1) / 2 * H;
+      el.style.transform = `translate(-50%,-50%) translate(${x}px,${y}px)`;
+      el.style.opacity = '1';
+    });
+  }
+
+  /* ── INTERACTION ── */
+  let drag = false, px = 0, py = 0, vy = 0, vx = 0, rotY = 0.3, rotX = 0.15;
+
+  canvas.addEventListener('mousedown', e => { drag=true; px=e.clientX; py=e.clientY; vy=vx=0; });
+  window.addEventListener('mouseup', () => drag=false);
+  window.addEventListener('mousemove', e => {
+    if (!drag) return;
+    vy = (e.clientX-px)*0.006; vx = (e.clientY-py)*0.004;
+    rotY += vy; rotX = Math.max(-0.55, Math.min(0.55, rotX+vx));
+    px=e.clientX; py=e.clientY;
+  });
+  canvas.addEventListener('touchstart', e => { drag=true; px=e.touches[0].clientX; py=e.touches[0].clientY; },{passive:true});
+  canvas.addEventListener('touchend', () => drag=false);
+  canvas.addEventListener('touchmove', e => {
+    if (!drag) return;
+    vy=(e.touches[0].clientX-px)*0.006; vx=(e.touches[0].clientY-py)*0.004;
+    rotY+=vy; rotX=Math.max(-0.55,Math.min(0.55,rotX+vx));
+    px=e.touches[0].clientX; py=e.touches[0].clientY;
+  },{passive:true});
+
+  window.addEventListener('resize', () => {
+    W=wrap.clientWidth; H=wrap.clientHeight;
+    camera.aspect=W/H; camera.updateProjectionMatrix();
+    renderer.setSize(W,H);
+  });
+
+  /* ── ANIMATE ── */
+  let t = 0;
+  function animate() {
+    requestAnimationFrame(animate);
+    t += 0.016;
+    if (!drag) { vy *= 0.92; vx *= 0.92; rotY += vy + 0.0025; }
+    rg.rotation.y = rotY; rg.rotation.x = rotX;
+    pulseRings.forEach(r => {
+      const s = 1 + 0.3 * Math.abs(Math.sin(t * 1.1 + r.ph));
+      r.m.scale.setScalar(s);
+      r.m.material.opacity = 0.4 * (1 - 0.35 * Math.abs(Math.sin(t * 1.1 + r.ph)));
+    });
+    updateLabels();
+    renderer.render(scene, camera);
+  }
+
+  /* ── LOAD DATA & INIT ── */
+  setupLabels();
+  addArcs();
+  addMarkers();
+  animate(); // start spinning immediately
+
+  fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json')
+    .then(r => r.json())
+    .then(topo => {
+      const features = topojson.feature(topo, topo.objects.countries).features;
+      // Apply canvas texture
+      const texCanvas = buildTexture(features);
+      globeMat.map = new THREE.CanvasTexture(texCanvas);
+      globeMat.needsUpdate = true;
+      // Add crisp border lines
+      buildBorders(features);
+      // Hide loading
+      document.getElementById('globe-loading').style.opacity = '0';
+    })
+    .catch(() => {
+      document.getElementById('globe-loading').style.opacity = '0';
+    });
+
+})();
+</script>
+
+<!-- ── FADE-IN OBSERVER ── -->
+<script>
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('on'); obs.unobserve(e.target); } });
+}, { threshold: 0.08 });
+document.querySelectorAll('.fi').forEach(el => obs.observe(el));
+document.querySelectorAll('#hero .fi').forEach(el => el.classList.add('on'));
+</script>
+</body>
+</html>
