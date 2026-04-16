@@ -58,18 +58,57 @@
   .hero-cta:hover { background: var(--gold); color: var(--ink); }
 
   /* GLOBE */
-  .globe-wrap { position: relative; width: 380px; height: 380px; display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; }
-  #globe-canvas { cursor: grab; display: block; }
+  .globe-outer {display: flex; flex-direction: column; gap: 0.6rem;flex-shrink: 0; width: 380px;align-self: center;}
+  /* aspect-ratio keeps the box square regardless of container; overflow:visible lets the atmosphere glow breathe past the box edges */
+  .globe-wrap { position: relative; width: 100%; aspect-ratio: 1 / 1; overflow: visible; }
+  /* canvas fills its parent 100% via CSS — Three.js setSize still controls the draw-buffer, but the CSS size comes from the container */
+  #globe-canvas {display: block; width: 100% !important; height: 100% !important; cursor: grab; }
   #globe-canvas:active { cursor: grabbing; }
-  #globe-labels { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; }
-  .glabel { position: absolute; transform: translate(-50%,-50%); font-family: var(--sans); font-size: 9px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; white-space: nowrap; transition: opacity 0.3s; text-shadow: 0 0 8px rgba(12,20,33,0.95), 0 0 3px rgba(12,20,33,1); pointer-events: none; }
+  /* labels layer clips its own text but never clips the WebGL canvas */
+  #globe-labels {position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+  .glabel {
+    position: absolute; transform: translate(-50%,-50%);
+    font-family: var(--sans); font-size: 9px; font-weight: 500;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    white-space: nowrap; transition: opacity 0.3s;
+    text-shadow: 0 0 8px rgba(12,20,33,0.95), 0 0 3px rgba(12,20,33,1);
+    pointer-events: none;
+  }
   .glabel.hl { color: var(--glt); font-size: 10px; letter-spacing: 0.11em; }
   .glabel.dim { color: rgba(230,224,212,0.5); }
-  .globe-badge { position: absolute; bottom: 0.5rem; right: 0.3rem; background: rgba(12,20,33,0.92); border: 1px solid rgba(200,146,58,0.35); padding: 0.6rem 0.8rem; }
-  .badge-title { font-size: 0.57rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.4rem; }
-  .badge-item { display: flex; align-items: center; gap: 0.38rem; font-size: 0.63rem; color: rgba(230,224,212,0.65); margin-bottom: 0.16rem; }
-  .badge-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--glt); flex-shrink: 0; }
-  .globe-loading { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 0.68rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); opacity: 0.7; transition: opacity 0.5s; }
+  /* badge lives BELOW the canvas at all sizes — no position:absolute tricks */
+  .globe-badge {
+    background: rgba(12,20,33,0.92);
+    border: 1px solid rgba(200,146,58,0.35);
+    padding: 0.6rem 0.85rem;
+  }
+  .badge-title {
+    font-size: 0.57rem; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 0.4rem; display: block;
+  }
+  .badge-items { display: flex; flex-direction: column; gap: 0.14rem; }
+  .badge-item {
+    display: flex; align-items: center; gap: 0.38rem;
+    font-size: 0.63rem; color: rgba(230,224,212,0.65);
+  }
+  .badge-dot {width: 5px; height: 5px; border-radius: 50%; background: var(--glt); flex-shrink: 0;}
+  .globe-loading {position: absolute; inset: 0;display: flex; align-items: center; justify-content: center; font-size: 0.68rem; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--gold); opacity: 0.7; transition: opacity 0.5s; pointer-events: none; }
+
+  /* ── MOBILE overrides (inside your existing @media (max-width: 900px)) ── */
+  @media (max-width: 900px) {
+    .globe-outer { width: 100%; max-width: 440px; margin: 0 auto; order: 2; }
+    /* badge becomes a horizontal wrapping tag-cloud */
+    .globe-badge { display: flex; flex-wrap: wrap; align-items: center; gap: 0.35rem 0.9rem; }
+    .badge-title  { margin-bottom: 0; }
+    .badge-items  { flex-direction: row; flex-wrap: wrap; gap: 0.3rem 0.85rem; }
+  }
+  @media (max-width: 540px) {
+    .globe-outer { max-width: 100%; }
+    /* keep badge visible — just tighten it up */
+    .badge-title  { font-size: 0.55rem; }
+    .badge-item   { font-size: 0.6rem; }
+  }
 
   /* SECTIONS */
   section { padding: 5.5rem 5rem; }
@@ -222,8 +261,8 @@
   <div class="hero-text fi">
     <div class="hero-eyebrow">Product Leader · AI/ML · Global Commerce</div>
     <h1>Balaji<br><em>Kunjeti</em></h1>
-    <p class="hero-punch">"I don’t just launch in new markets - I create the playbook for winning."</p>
-    <p class="hero-desc">16 years. 8 global markets. Leading products that scale to hundreds of millions — with clear momentum toward billion-dollar impact. The kind of products that power global commerce — not just metrics.</p>
+    <p class="hero-punch">"I don’t just launch products in new markets - I create the playbook for winning."</p>
+    <p class="hero-desc">16 years of Product Management. 8 global markets. <br> Leading products that scale to hundreds of millions — with clear momentum toward billion-dollar impact. <br>The kind of products that power global commerce — not just metrics.</p>
     <div class="hero-stats">
       <div><div class="stat-num">$1B+</div><div class="stat-label">GMV Trajectory</div></div>
       <div><div class="stat-num">18</div><div class="stat-label">PMs Led</div></div>
@@ -235,12 +274,16 @@
     </a>
   </div>
 
-  <div class="globe-wrap fi" style="transition-delay:0.15s">
+ <div class="globe-outer fi" style="transition-delay:0.15s">
+  <div class="globe-wrap">
     <canvas id="globe-canvas"></canvas>
     <div id="globe-labels"></div>
     <div class="globe-loading" id="globe-loading">Rendering…</div>
-    <div class="globe-badge">
-      <div class="badge-title">Customers Served</div>
+  </div>
+  <!-- badge is a sibling of globe-wrap — never hidden, never absolute-positioned -->
+  <div class="globe-badge">
+    <span class="badge-title">Customers Served</span>
+    <div class="badge-items">
       <div class="badge-item"><div class="badge-dot"></div>United States</div>
       <div class="badge-item"><div class="badge-dot"></div>Canada</div>
       <div class="badge-item"><div class="badge-dot"></div>Mexico</div>
@@ -251,6 +294,7 @@
       <div class="badge-item"><div class="badge-dot"></div>Europe</div>
     </div>
   </div>
+</div>
 </section>
 
 <!-- IMPACT -->
@@ -515,115 +559,288 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js"></script>
 <script>
 (function(){
   const MARKET_IDS = new Set([
     840,124,484,152,356,156,826,
-    250,276,724,380,528,56,756,620,752,578,246,208,40,372,300,616,203,804,642,100,191,348,703,705,233,428,440,688,807,8,70
+    250,276,724,380,528,56,756,620,752,578,246,208,40,372,300,616,
+    203,804,642,100,191,348,703,705,233,428,440,688,807,8,70
   ]);
+
   const LABELS=[
-    {name:'United States',lat:38,lng:-97,hl:true},
-    {name:'Canada',lat:61,lng:-100,hl:true},
-    {name:'Mexico',lat:23,lng:-102,hl:true},
-    {name:'Chile',lat:-36,lng:-71,hl:true},
-    {name:'India',lat:21,lng:79,hl:true},
-    {name:'China',lat:36,lng:104,hl:true},
-    {name:'UK',lat:52,lng:-1,hl:true},
-    {name:'Europe',lat:48,lng:15,hl:true},
-    {name:'Brazil',lat:-10,lng:-52},
-    {name:'Russia',lat:62,lng:96},
-    {name:'Australia',lat:-26,lng:133},
-    {name:'Japan',lat:36,lng:138},
-    {name:'S. Africa',lat:-30,lng:25},
-    {name:'Saudi Arabia',lat:24,lng:45},
-    {name:'Indonesia',lat:-2,lng:118},
-    {name:'Argentina',lat:-40,lng:-65},
-  ];
-  const ARCS=[
-    [37,-96,56,-106],[37,-96,23,-103],[23,-103,-36,-72],
-    [37,-96,21,79],[21,79,36,104],[21,79,50,4],
-    [37,-96,50,4],[36,104,52,-1],[36,104,50,4]
+    {name:'United States', lat:38,  lng:-97,   hl:true},
+    {name:'Canada',        lat:61,  lng:-100,  hl:true},
+    {name:'Mexico',        lat:23,  lng:-102,  hl:true},
+    {name:'Chile',         lat:-36, lng:-71,   hl:true},
+    {name:'India',         lat:21,  lng:79,    hl:true},
+    {name:'China',         lat:36,  lng:104,   hl:true},
+    {name:'UK',            lat:53,  lng:-1,    hl:true},
+    {name:'Europe',        lat:48,  lng:15,    hl:true},
+    {name:'Brazil',        lat:-10, lng:-52},
+    {name:'Russia',        lat:62,  lng:96},
+    {name:'Australia',     lat:-26, lng:133},
+    {name:'Japan',         lat:36,  lng:138},
+    {name:'S. Africa',     lat:-30, lng:25},
+    {name:'Saudi Arabia',  lat:24,  lng:45},
+    {name:'Indonesia',     lat:-2,  lng:118},
+    {name:'Argentina',     lat:-40, lng:-65},
   ];
 
-  const wrap=document.querySelector('.globe-wrap'),canvas=document.getElementById('globe-canvas');
-  const labDiv=document.getElementById('globe-labels');
-  let W=wrap.clientWidth,H=wrap.clientHeight;
-  const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true});
-  renderer.setPixelRatio(Math.min(devicePixelRatio,2));
-  renderer.setSize(W,H);
-  renderer.setClearColor(0,0);
-  const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(40,W/H,0.1,100);
-  camera.position.set(0,0,2.7);
-  scene.add(new THREE.AmbientLight(0xffffff,0.12));
-  const sun=new THREE.DirectionalLight(0xfff5e0,1.1);sun.position.set(4,2,5);scene.add(sun);
-  const rim=new THREE.DirectionalLight(0xc8923a,0.3);rim.position.set(-4,-2,-2);scene.add(rim);
-  const rg=new THREE.Group();scene.add(rg);
-  const globeMat=new THREE.MeshPhongMaterial({color:0x060c18,emissive:0x020408,specular:0x1a3050,shininess:12});
-  rg.add(new THREE.Mesh(new THREE.SphereGeometry(1,80,80),globeMat));
-  scene.add(new THREE.Mesh(new THREE.SphereGeometry(1.09,64,64),new THREE.MeshPhongMaterial({color:0x0a1e38,transparent:true,opacity:0.18,side:THREE.BackSide})));
-  const sp=[];for(let i=0;i<1400;i++){const r=17+Math.random()*8,t=Math.random()*Math.PI*2,p=Math.acos(2*Math.random()-1);sp.push(r*Math.sin(p)*Math.cos(t),r*Math.cos(p),r*Math.sin(p)*Math.sin(t));}
-  const sg=new THREE.BufferGeometry();sg.setAttribute('position',new THREE.Float32BufferAttribute(sp,3));
-  scene.add(new THREE.Points(sg,new THREE.PointsMaterial({color:0xffffff,size:0.045,transparent:true,opacity:0.42})));
-  function ll3(la,lo,r){const ph=(90-la)*Math.PI/180,th=(lo+180)*Math.PI/180;return new THREE.Vector3(-r*Math.sin(ph)*Math.cos(th),r*Math.cos(ph),r*Math.sin(ph)*Math.sin(th));}
-  function buildTex(features){
-    const TW=2048,TH=1024,c=document.createElement('canvas');c.width=TW;c.height=TH;
-    const ctx=c.getContext('2d');ctx.fillStyle='#030609';ctx.fillRect(0,0,TW,TH);
-    function gc(lo,la){return[(lo+180)/360*TW,(90-la)/180*TH];}
-    function mkp(f){
-      const g=f.geometry;if(!g)return;ctx.beginPath();
-      const ring=r=>{let pl=null;r.forEach(([lo,la],i)=>{if(pl!==null&&Math.abs(lo-pl)>180){ctx.closePath();ctx.beginPath();pl=null;}const[x,y]=gc(lo,la);pl===null?ctx.moveTo(x,y):ctx.lineTo(x,y);pl=lo;});ctx.closePath();};
-      if(g.type==='Polygon')g.coordinates.forEach(ring);else if(g.type==='MultiPolygon')g.coordinates.forEach(p=>p.forEach(ring));
+  const ARCS=[
+    [37,-96,  56,-106],  // US→Canada
+    [37,-96,  23,-103],  // US→Mexico
+    [23,-103,-36,-72],   // Mexico→Chile
+    [37,-96,  21,79],    // US→India
+    [21,79,   36,104],   // India→China
+    [21,79,   50,4],     // India→Europe
+    [37,-96,  50,4],     // US→Europe
+    [36,104,  53,-1],    // China→UK
+    [36,104,  50,4],     // China→Europe
+  ];
+
+  const wrap   = document.querySelector('.globe-wrap');
+  const canvas = document.getElementById('globe-canvas');
+  const labDiv = document.getElementById('globe-labels');
+
+  /* ── measure container (width drives height via aspect-ratio 1:1) ── */
+  function measure() {
+    const W = wrap.offsetWidth  || 320;
+    const H = wrap.offsetHeight || W;   // square via CSS aspect-ratio
+    return { W, H };
+  }
+
+  let { W, H } = measure();
+
+  /* ── renderer ── */
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  renderer.setSize(W, H, false); // false = don't override CSS size
+  renderer.setClearColor(0, 0);
+
+  /* ── scene & camera ──
+     FOV 44° + z 3.3 → visible half-height = 3.3*tan(22°) = 1.334
+     Atmosphere r=1.09 fills 2*1.09/(2*1.334) = 81.7 % — comfortable
+     margin top+bottom so poles never clip.                             */
+  const scene  = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(44, W / H, 0.1, 100);
+  camera.position.set(0, 0, 3.3);
+
+  scene.add(new THREE.AmbientLight(0xffffff, 0.12));
+  const sun = new THREE.DirectionalLight(0xfff5e0, 1.1);
+  sun.position.set(4, 2, 5); scene.add(sun);
+  const rim = new THREE.DirectionalLight(0xc8923a, 0.3);
+  rim.position.set(-4, -2, -2); scene.add(rim);
+
+  const rg = new THREE.Group();
+  scene.add(rg);
+
+  /* globe sphere */
+  const globeMat = new THREE.MeshPhongMaterial({
+    color: 0x060c18, emissive: 0x020408, specular: 0x1a3050, shininess: 12
+  });
+  rg.add(new THREE.Mesh(new THREE.SphereGeometry(1, 80, 80), globeMat));
+
+  /* atmosphere halo — outside rg so it doesn't rotate */
+  scene.add(new THREE.Mesh(
+    new THREE.SphereGeometry(1.09, 64, 64),
+    new THREE.MeshPhongMaterial({ color: 0x0a1e38, transparent: true, opacity: 0.18, side: THREE.BackSide })
+  ));
+
+  /* stars */
+  const sp = [];
+  for (let i = 0; i < 1400; i++) {
+    const r = 17 + Math.random()*8, t = Math.random()*Math.PI*2, p = Math.acos(2*Math.random()-1);
+    sp.push(r*Math.sin(p)*Math.cos(t), r*Math.cos(p), r*Math.sin(p)*Math.sin(t));
+  }
+  const sg = new THREE.BufferGeometry();
+  sg.setAttribute('position', new THREE.Float32BufferAttribute(sp, 3));
+  scene.add(new THREE.Points(sg, new THREE.PointsMaterial({ color: 0xffffff, size: 0.045, transparent: true, opacity: 0.42 })));
+
+  /* ── helpers ── */
+  function ll3(la, lo, r) {
+    const ph = (90-la)*Math.PI/180, th = (lo+180)*Math.PI/180;
+    return new THREE.Vector3(-r*Math.sin(ph)*Math.cos(th), r*Math.cos(ph), r*Math.sin(ph)*Math.sin(th));
+  }
+
+  /* ── canvas texture ── */
+  function buildTex(features) {
+    const TW=2048, TH=1024;
+    const c = document.createElement('canvas'); c.width=TW; c.height=TH;
+    const ctx = c.getContext('2d');
+    ctx.fillStyle='#030609'; ctx.fillRect(0,0,TW,TH);
+    function gc(lo,la){ return [(lo+180)/360*TW, (90-la)/180*TH]; }
+    function mkp(f) {
+      const g=f.geometry; if(!g) return; ctx.beginPath();
+      const ring = r => {
+        let pl=null;
+        r.forEach(([lo,la])=>{
+          if(pl!==null && Math.abs(lo-pl)>180){ ctx.closePath(); ctx.beginPath(); pl=null; }
+          const [x,y]=gc(lo,la);
+          pl===null ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+          pl=lo;
+        });
+        ctx.closePath();
+      };
+      if(g.type==='Polygon') g.coordinates.forEach(ring);
+      else if(g.type==='MultiPolygon') g.coordinates.forEach(p=>p.forEach(ring));
     }
-    features.forEach(f=>{mkp(f);ctx.fillStyle=MARKET_IDS.has(+f.id)?'#2d1a06':'#0b1520';ctx.fill('evenodd');});
-    features.forEach(f=>{if(!MARKET_IDS.has(+f.id))return;mkp(f);ctx.fillStyle='rgba(200,146,58,0.16)';ctx.fill('evenodd');});
-    ctx.strokeStyle='#162c45';ctx.lineWidth=0.6;features.forEach(f=>{mkp(f);ctx.stroke();});
-    ctx.strokeStyle='rgba(200,146,58,0.42)';ctx.lineWidth=0.9;features.forEach(f=>{if(!MARKET_IDS.has(+f.id))return;mkp(f);ctx.stroke();});
+    features.forEach(f=>{ mkp(f); ctx.fillStyle=MARKET_IDS.has(+f.id)?'#2d1a06':'#0b1520'; ctx.fill('evenodd'); });
+    features.forEach(f=>{ if(!MARKET_IDS.has(+f.id)) return; mkp(f); ctx.fillStyle='rgba(200,146,58,0.16)'; ctx.fill('evenodd'); });
+    ctx.strokeStyle='#162c45'; ctx.lineWidth=0.6; features.forEach(f=>{ mkp(f); ctx.stroke(); });
+    ctx.strokeStyle='rgba(200,146,58,0.42)'; ctx.lineWidth=0.9;
+    features.forEach(f=>{ if(!MARKET_IDS.has(+f.id)) return; mkp(f); ctx.stroke(); });
     return c;
   }
-  function buildBorders(features){
-    const pts=[],hlp=[];
-    features.forEach(f=>{const isHL=MARKET_IDS.has(+f.id);const g=f.geometry;if(!g)return;
-      const ring=r=>{for(let i=0;i<r.length-1;i++){const[lo1,la1]=r[i],[lo2,la2]=r[i+1];if(Math.abs(lo2-lo1)>180)continue;const a=ll3(la1,lo1,1.004),b=ll3(la2,lo2,1.004);(isHL?hlp:pts).push(a,b);}};
-      if(g.type==='Polygon')g.coordinates.forEach(ring);else if(g.type==='MultiPolygon')g.coordinates.forEach(p=>p.forEach(ring));
+
+  /* ── border lines ── */
+  function buildBorders(features) {
+    const pts=[], hlp=[];
+    features.forEach(f => {
+      const isHL=MARKET_IDS.has(+f.id); const g=f.geometry; if(!g) return;
+      const ring = r => {
+        for(let i=0;i<r.length-1;i++){
+          const [lo1,la1]=r[i],[lo2,la2]=r[i+1];
+          if(Math.abs(lo2-lo1)>180) continue;
+          (isHL?hlp:pts).push(ll3(la1,lo1,1.004), ll3(la2,lo2,1.004));
+        }
+      };
+      if(g.type==='Polygon') g.coordinates.forEach(ring);
+      else if(g.type==='MultiPolygon') g.coordinates.forEach(p=>p.forEach(ring));
     });
-    rg.add(new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(pts),new THREE.LineBasicMaterial({color:0x1a3858,transparent:true,opacity:0.5})));
-    rg.add(new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(hlp),new THREE.LineBasicMaterial({color:0xc8923a,transparent:true,opacity:0.65})));
+    rg.add(new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(pts),
+      new THREE.LineBasicMaterial({color:0x1a3858, transparent:true, opacity:0.5})));
+    rg.add(new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(hlp),
+      new THREE.LineBasicMaterial({color:0xc8923a, transparent:true, opacity:0.65})));
   }
+
+  /* ── arcs ── */
   ARCS.forEach(([la1,lo1,la2,lo2])=>{
-    const s=ll3(la1,lo1,1),e=ll3(la2,lo2,1),mid=s.clone().add(e).normalize().multiplyScalar(1.28);
-    const pts=[];for(let i=0;i<=70;i++){const t=i/70;pts.push(new THREE.Vector3().addScaledVector(s,(1-t)*(1-t)).addScaledVector(mid,2*(1-t)*t).addScaledVector(e,t*t));}
-    rg.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts),70,0.0022,4,false),new THREE.MeshBasicMaterial({color:0xc8923a,transparent:true,opacity:0.2})));
+    const s=ll3(la1,lo1,1), e=ll3(la2,lo2,1);
+    const mid=s.clone().add(e).normalize().multiplyScalar(1.28);
+    const pts=[];
+    for(let i=0;i<=70;i++){
+      const t=i/70;
+      pts.push(new THREE.Vector3()
+        .addScaledVector(s,(1-t)*(1-t))
+        .addScaledVector(mid,2*(1-t)*t)
+        .addScaledVector(e,t*t));
+    }
+    rg.add(new THREE.Mesh(
+      new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts),70,0.0022,4,false),
+      new THREE.MeshBasicMaterial({color:0xc8923a, transparent:true, opacity:0.2})
+    ));
   });
-  const markerPts=[{lat:37,lng:-96},{lat:56,lng:-106},{lat:23,lng:-103},{lat:-36,lng:-72},{lat:21,lng:79},{lat:36,lng:104},{lat:52,lng:-1},{lat:50,lng:10}];
+
+  /* ── markers ── */
+  const markerCoords=[{lat:37,lng:-96},{lat:56,lng:-106},{lat:23,lng:-103},{lat:-36,lng:-72},
+    {lat:21,lng:79},{lat:36,lng:104},{lat:53,lng:-1},{lat:50,lng:10}];
   const pulses=[];
-  markerPts.forEach(({lat,lng})=>{
-    const pos=ll3(lat,lng,1.002),norm=pos.clone().normalize();
-    const dot=new THREE.Mesh(new THREE.SphereGeometry(0.016,10,10),new THREE.MeshBasicMaterial({color:0xe8ad52}));dot.position.copy(pos);rg.add(dot);
-    const sp2=new THREE.Mesh(new THREE.CylinderGeometry(0.002,0.007,0.052,6),new THREE.MeshBasicMaterial({color:0xe8ad52,transparent:true,opacity:0.5}));sp2.position.copy(pos.clone().multiplyScalar(1.03));sp2.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),norm);rg.add(sp2);
-    const ring=new THREE.Mesh(new THREE.RingGeometry(0.022,0.038,24),new THREE.MeshBasicMaterial({color:0xe8ad52,side:THREE.DoubleSide,transparent:true,opacity:0.42}));ring.position.copy(pos.clone().multiplyScalar(1.003));ring.quaternion.setFromUnitVectors(new THREE.Vector3(0,0,1),norm);rg.add(ring);
-    pulses.push({m:ring,ph:Math.random()*Math.PI*2});
+  markerCoords.forEach(({lat,lng})=>{
+    const pos=ll3(lat,lng,1.002), norm=pos.clone().normalize();
+    const dot=new THREE.Mesh(new THREE.SphereGeometry(0.016,10,10),
+      new THREE.MeshBasicMaterial({color:0xe8ad52}));
+    dot.position.copy(pos); rg.add(dot);
+    const spk=new THREE.Mesh(new THREE.CylinderGeometry(0.002,0.007,0.052,6),
+      new THREE.MeshBasicMaterial({color:0xe8ad52,transparent:true,opacity:0.5}));
+    spk.position.copy(pos.clone().multiplyScalar(1.03));
+    spk.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),norm); rg.add(spk);
+    const ring=new THREE.Mesh(new THREE.RingGeometry(0.022,0.038,24),
+      new THREE.MeshBasicMaterial({color:0xe8ad52,side:THREE.DoubleSide,transparent:true,opacity:0.42}));
+    ring.position.copy(pos.clone().multiplyScalar(1.003));
+    ring.quaternion.setFromUnitVectors(new THREE.Vector3(0,0,1),norm); rg.add(ring);
+    pulses.push({m:ring, ph:Math.random()*Math.PI*2});
   });
+
+  /* ── floating labels ── */
   const labelEls=[];
-  LABELS.forEach(l=>{const el=document.createElement('div');el.className='glabel '+(l.hl?'hl':'dim');el.textContent=l.name;el.style.opacity='0';labDiv.appendChild(el);const obj=new THREE.Object3D();obj.position.copy(ll3(l.lat,l.lng,1.05));rg.add(obj);labelEls.push({el,obj});});
-  const _wp=new THREE.Vector3(),_sp=new THREE.Vector3();
-  function updLabels(){const cd=camera.position.clone().normalize();labelEls.forEach(({el,obj})=>{obj.getWorldPosition(_wp);const vis=_wp.clone().normalize().dot(cd)>0.2;if(!vis){el.style.opacity='0';return;}_sp.copy(_wp).project(camera);const x=(_sp.x+1)/2*W,y=-(_sp.y-1)/2*H;el.style.transform=`translate(-50%,-50%) translate(${x}px,${y}px)`;el.style.opacity='1';});}
-  let drag=false,px=0,py=0,vy=0,vx=0,rotY=0.3,rotX=0.15;
-  canvas.addEventListener('mousedown',e=>{drag=true;px=e.clientX;py=e.clientY;vy=vx=0;});
-  window.addEventListener('mouseup',()=>drag=false);
-  window.addEventListener('mousemove',e=>{if(!drag)return;vy=(e.clientX-px)*0.006;vx=(e.clientY-py)*0.004;rotY+=vy;rotX=Math.max(-0.55,Math.min(0.55,rotX+vx));px=e.clientX;py=e.clientY;});
-  canvas.addEventListener('touchstart',e=>{drag=true;px=e.touches[0].clientX;py=e.touches[0].clientY;},{passive:true});
-  canvas.addEventListener('touchend',()=>drag=false);
-  canvas.addEventListener('touchmove',e=>{if(!drag)return;vy=(e.touches[0].clientX-px)*0.006;vx=(e.touches[0].clientY-py)*0.004;rotY+=vy;rotX=Math.max(-0.55,Math.min(0.55,rotX+vx));px=e.touches[0].clientX;py=e.touches[0].clientY;},{passive:true});
-  window.addEventListener('resize',()=>{W=wrap.clientWidth;H=wrap.clientHeight;renderer.setSize(W,H);camera.aspect=W/H;camera.updateProjectionMatrix();});
+  LABELS.forEach(l=>{
+    const el=document.createElement('div');
+    el.className='glabel '+(l.hl?'hl':'dim');
+    el.textContent=l.name; el.style.opacity='0';
+    labDiv.appendChild(el);
+    const obj=new THREE.Object3D();
+    obj.position.copy(ll3(l.lat,l.lng,1.05));
+    rg.add(obj);
+    labelEls.push({el,obj});
+  });
+
+  const _wp=new THREE.Vector3(), _sp=new THREE.Vector3();
+  function updLabels(){
+    const cd=camera.position.clone().normalize();
+    labelEls.forEach(({el,obj})=>{
+      obj.getWorldPosition(_wp);
+      const vis=_wp.clone().normalize().dot(cd)>0.2;
+      if(!vis){ el.style.opacity='0'; return; }
+      _sp.copy(_wp).project(camera);
+      const x=(_sp.x+1)/2*W, y=-(_sp.y-1)/2*H;
+      el.style.transform=`translate(-50%,-50%) translate(${x}px,${y}px)`;
+      el.style.opacity='1';
+    });
+  }
+
+  /* ── interaction ── */
+  let drag=false, px=0, py=0, vy=0, vx=0, rotY=0.3, rotX=0.15;
+  canvas.addEventListener('mousedown', e=>{ drag=true; px=e.clientX; py=e.clientY; vy=vx=0; });
+  window.addEventListener('mouseup', ()=>drag=false);
+  window.addEventListener('mousemove', e=>{
+    if(!drag) return;
+    vy=(e.clientX-px)*0.006; vx=(e.clientY-py)*0.004;
+    rotY+=vy; rotX=Math.max(-0.55,Math.min(0.55,rotX+vx));
+    px=e.clientX; py=e.clientY;
+  });
+  canvas.addEventListener('touchstart', e=>{
+    drag=true; px=e.touches[0].clientX; py=e.touches[0].clientY;
+  },{passive:true});
+  canvas.addEventListener('touchend',   ()=>drag=false);
+  canvas.addEventListener('touchmove', e=>{
+    if(!drag) return;
+    vy=(e.touches[0].clientX-px)*0.006; vx=(e.touches[0].clientY-py)*0.004;
+    rotY+=vy; rotX=Math.max(-0.55,Math.min(0.55,rotX+vx));
+    px=e.touches[0].clientX; py=e.touches[0].clientY;
+  },{passive:true});
+
+  /* ── resize: ResizeObserver watches the container precisely ── */
+  function onResize() {
+    const s=measure(); W=s.W; H=s.H;
+    renderer.setSize(W, H, false); // false = don't touch CSS size
+    camera.aspect=W/H; camera.updateProjectionMatrix();
+  }
+  if(window.ResizeObserver){
+    new ResizeObserver(onResize).observe(wrap);
+  } else {
+    window.addEventListener('resize', onResize);
+    window.addEventListener('orientationchange', ()=>setTimeout(onResize,200));
+  }
+
+  /* ── render loop ── */
   let t=0;
-  function animate(){requestAnimationFrame(animate);t+=0.016;if(!drag){vy*=0.92;vx*=0.92;rotY+=vy+0.0025;}rg.rotation.y=rotY;rg.rotation.x=rotX;pulses.forEach(r=>{const s=1+0.28*Math.abs(Math.sin(t*1.1+r.ph));r.m.scale.setScalar(s);r.m.material.opacity=0.38*(1-0.32*Math.abs(Math.sin(t*1.1+r.ph)));});updLabels();renderer.render(scene,camera);}
+  function animate(){
+    requestAnimationFrame(animate); t+=0.016;
+    if(!drag){ vy*=0.92; vx*=0.92; rotY+=vy+0.0025; }
+    rg.rotation.y=rotY; rg.rotation.x=rotX;
+    pulses.forEach(r=>{
+      const s=1+0.28*Math.abs(Math.sin(t*1.1+r.ph));
+      r.m.scale.setScalar(s);
+      r.m.material.opacity=0.38*(1-0.32*Math.abs(Math.sin(t*1.1+r.ph)));
+    });
+    updLabels();
+    renderer.render(scene,camera);
+  }
   animate();
-  fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json').then(r=>r.json()).then(topo=>{
-    const features=topojson.feature(topo,topo.objects.countries).features;
-    globeMat.map=new THREE.CanvasTexture(buildTex(features));globeMat.needsUpdate=true;
-    buildBorders(features);
-    document.getElementById('globe-loading').style.opacity='0';
-  }).catch(()=>document.getElementById('globe-loading').style.opacity='0');
+
+  /* ── load world atlas ── */
+  fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json')
+    .then(r=>r.json())
+    .then(topo=>{
+      const features=topojson.feature(topo,topo.objects.countries).features;
+      globeMat.map=new THREE.CanvasTexture(buildTex(features));
+      globeMat.needsUpdate=true;
+      buildBorders(features);
+      document.getElementById('globe-loading').style.opacity='0';
+    })
+    .catch(()=>document.getElementById('globe-loading').style.opacity='0');
 })();
 </script>
 <script>
